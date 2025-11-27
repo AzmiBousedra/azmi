@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azmi</title>
+    <style>
+        :root {
+            --dot-size: 16px;
+            --dot-color: rgba(255, 255, 255, 0.805);
+            --pulse-color: rgba(255, 255, 255, 0.4);
+            --text-bg: rgba(255, 255, 255, 0.198);
+            --img-ar: 2657 / 1412;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #1a1a1a;
+            overflow: hidden;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        .layout-wrapper {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .image-container {
+            position: absolute;
+            /* REVERTED: Centered positioning for stable desktop view */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            height: 100vh;
+            width: auto;
+            aspect-ratio: var(--img-ar); 
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            will-change: transform;
+            /* REVERTED: Smooth transition for hover zoom effects */
+            transition: transform 1.8s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        /* Desktop: If screen is wider than image aspect ratio, fit width */
+        @media (min-aspect-ratio: 2657/1412) {
+            .image-container {
+                width: 100vw;
+                height: auto;
+            }
+        }
+
+        /* --- MOBILE SCROLL OVERRIDES --- */
+        @media (max-width: 768px) {
+            .layout-wrapper {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+            }
+            
+            .layout-wrapper * {
+                pointer-events: auto;
+            }
+
+            .image-container {
+                left: 0;
+                top: 0;
+                transform: none;
+                height: 100vh;
+                width: auto;
+                transition: none; 
+            }
+            
+            #exit-sidebar:hover ~ .layout-wrapper .image-container {
+                transform: translateX(15px) !important;
+            }
+        }
+
+        .portfolio-image {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+        }
+
+        .hotspot {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            cursor: pointer;
+            z-index: 10;
+            transform: translate(-50%, -50%);
+            transition: transform 0.3s ease;
+        }
+
+        .hotspot:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            z-index: 20;
+        }
+
+        .dot {
+            width: var(--dot-size);
+            height: var(--dot-size);
+            background-color: var(--dot-color);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            transition: background-color 0.3s ease;
+        }
+
+        .dot::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: var(--pulse-color);
+            animation: pulse 2s infinite;
+            z-index: -1;
+        }
+
+        @keyframes pulse {
+            0% { width: 100%; height: 100%; opacity: 0.8; }
+            100% { width: 300%; height: 300%; opacity: 0; }
+        }
+
+        .label {
+            position: absolute;
+            left: 24px;
+            background-color: var(--text-bg);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateX(-10px);
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(4px);
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .hotspot:hover .label {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .hotspot:hover .dot {
+            background-color: #fff;
+            box-shadow: 0 0 15px rgba(255,255,255,0.6);
+        }
+
+        #link-comments4me { top: 44%; left: 19.8%; }
+        #link-tunewear { top: 55.5%; left: 11.25%; }
+        #link-contact { top: 81.8%; left: 72.7%; }
+        #link-notes { top: 37%; left: 29.7%; }
+        #link-resume { top: 45.7%; left: 76%; }
+        #link-github { top: 32.9%; left: 70.3%; }
+        #link-soon { top: 82.8%; left: 88.8%; }
+
+        #exit-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 20px; 
+            z-index: 1000;
+            cursor: pointer;
+            text-decoration: none;
+            background: transparent;
+            overflow: visible; 
+        }
+
+        #exit-sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 25vw; 
+            height: 100%;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.9) 0%, rgba(255,255,255,0) 100%);
+            opacity: 0;
+            z-index: -1;
+            pointer-events: none; 
+            transition: opacity 1.8s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        #exit-sidebar:hover::before {
+            opacity: 1;
+        }
+
+        /* Desktop specific hover override for Exit Sidebar */
+        @media (min-width: 769px) {
+            #exit-sidebar:hover ~ .layout-wrapper .image-container {
+                /* REVERTED: Standard transform for the zoom effect */
+                transform: translate(-50%, -50%) scale(1.03) translateX(15px);
+            }
+        }
+
+        .exit-text {
+            position: absolute;
+            top: 50%;
+            left: 40px;
+            transform: translateY(-50%) translateX(-10px);
+            font-size: 14px; 
+            font-weight: 500;
+            color: #ffffff;
+            opacity: 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            white-space: nowrap;
+            pointer-events: none; 
+            transition: all 1s ease 0.3s; 
+        }
+
+        #exit-sidebar:hover .exit-text {
+            opacity: 1;
+            transform: translateY(-50%) translateX(0);
+        }
+
+        /* --- INSTRUCTION LABEL --- */
+        .instruction-label {
+            /* Reuse .label styles */
+            background-color: var(--text-bg);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            backdrop-filter: blur(4px);
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            
+            /* Positioning */
+            position: fixed;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 200;
+            pointer-events: none; /* Let clicks pass through */
+
+            /* Animation */
+            opacity: 0;
+            animation: fadeInLabel 1.8s cubic-bezier(0.19, 1, 0.22, 1) 0.5s forwards;
+        }
+
+        @keyframes fadeInLabel {
+            0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+            100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .mobile-text { display: none; }
+
+        @media (max-width: 768px) {
+            .dot { width: 20px; height: 20px; }
+            .label { display: none; }
+            .hotspot:active .label, .hotspot:focus .label {
+                display: block; opacity: 1; transform: translateX(0);
+            }
+            #exit-sidebar:hover::before { width: 50vw; }
+            .exit-text { font-size: 14px; }
+
+            /* Swap text for mobile */
+            .desktop-text { display: none; }
+            .mobile-text { display: inline; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- EXIT OVERLAY -->
+    <a href="home.html" id="exit-sidebar" aria-label="Exit Portfolio">
+        <span class="exit-text">Exit</span>
+    </a>
+
+    <!-- INSTRUCTION LABEL -->
+    <div class="instruction-label">
+        <span class="desktop-text">Hover the dots to explore</span>
+        <span class="mobile-text">Scroll & click to explore</span>
+    </div>
+
+    <div class="layout-wrapper">
+        <div class="image-container">
+            <img src="bg.png" alt="Workspace Portfolio" class="portfolio-image" id="main-bg">
+
+            <a href="https://comments4.me" class="hotspot" id="link-comments4me" aria-label="My Projects">
+                <span class="dot"></span>
+                <span class="label">Comments4Me</span>
+            </a>
+
+            <a href="https://github.com/AzmiBousedra/TuneWear" class="hotspot" id="link-tunewear" aria-label="About Me">
+                <span class="dot"></span>
+                <span class="label">TuneWear</span>
+            </a>
+
+            <a href="https://www.linkedin.com/in/azmibousedra" class="hotspot" id="link-contact" aria-label="Contact Me">
+                <span class="dot"></span>
+                <span class="label">Contact</span>
+            </a>
+
+            <a href="#resume" class="hotspot" id="link-notes" aria-label="Notes">
+                <span class="dot"></span>
+                <span class="label">Notes</span>
+            </a>
+
+            <!-- HTML Resume Link -->
+            <a href="resume.html" class="hotspot" id="link-resume" aria-label="View Resume">
+                <span class="dot"></span>
+                <span class="label">Resume</span>
+            </a>
+
+            <a href="https://github.com/azmibousedra" class="hotspot" id="link-github" aria-label="GitHub">
+                <span class="dot"></span>
+                <span class="label">GitHub</span>
+            </a>
+
+            <a href="#coming-soon" class="hotspot" id="link-soon" aria-label="Coming Soon">
+                <span class="dot"></span>
+                <span class="label">Soon</span>
+            </a>
+
+        </div>
+    </div>
+
+    <script>
+        const img = document.getElementById('main-bg');
+        img.onerror = function() {
+            console.log("bg.png not found.");
+            img.style.display = 'none';
+            const container = document.querySelector('.image-container');
+            container.style.width = '100vw'; 
+            container.style.height = '100vh';
+            container.style.background = 'linear-gradient(135deg, #2b2b2b 0%, #1a1a1a 100%)';
+            container.style.display = 'flex';
+            container.style.alignItems = 'center';
+            container.style.justifyContent = 'center';
+            
+            const msg = document.createElement('div');
+            msg.style.color = 'rgba(255,255,255,0.5)';
+            msg.innerText = "Image 'bg.png' not found. Ensure it is in the same folder.";
+            container.appendChild(msg);
+        };
+
+        // --- MOBILE HORIZONTAL SCROLL LOGIC ONLY ---
+        function initMobileScroll() {
+            if (window.innerWidth > 768) {
+                // Cleanup mobile styles if switching to desktop
+                document.documentElement.style.overflow = '';
+                document.body.style.height = '';
+                document.body.style.overflow = '';
+                return;
+            }
+
+            const imgContainer = document.querySelector('.image-container');
+            
+            requestAnimationFrame(() => {
+                const imgWidth = imgContainer.offsetWidth;
+                const viewWidth = window.innerWidth;
+                const viewHeight = window.innerHeight;
+
+                if (imgWidth > viewWidth) {
+                    const scrollDistance = imgWidth - viewWidth;
+                    document.documentElement.style.overflow = 'auto';
+                    document.documentElement.style.height = 'auto';
+                    document.body.style.height = (scrollDistance + viewHeight) + 'px';
+                    document.body.style.overflow = 'visible';
+                    
+                    window.addEventListener('scroll', () => {
+                        const scrollTop = window.scrollY;
+                        const xMove = Math.min(scrollDistance, Math.max(0, scrollTop));
+                        imgContainer.style.transform = `translate3d(${-xMove}px, 0, 0)`;
+                    });
+                }
+            });
+        }
+
+        window.addEventListener('load', initMobileScroll);
+        window.addEventListener('resize', () => {
+            // Simple debounce or just reload logic
+            initMobileScroll(); 
+        });
+    </script>
+</body>
+</html>

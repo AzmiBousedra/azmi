@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>???</title>
+    <style>
+        :root {
+            /* Exact variables from index.html */
+            --dot-size: 16px;
+            --dot-color: rgba(255, 255, 255, 0.805);
+            --pulse-color: rgba(255, 255, 255, 0.4);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .enter-container {
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 50px; /* Generous hit area */
+            transition: opacity 0.5s ease;
+        }
+
+        /* Reusing exact dot styling */
+        .dot {
+            width: var(--dot-size);
+            height: var(--dot-size);
+            background-color: var(--dot-color);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .dot::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: var(--pulse-color);
+            animation: pulse 2s infinite;
+            z-index: -1;
+        }
+
+        @keyframes pulse {
+            0% { width: 100%; height: 100%; opacity: 0.8; }
+            100% { width: 300%; height: 300%; opacity: 0; }
+        }
+
+        .enter-text {
+            margin-top: 24px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 300;
+            font-size: 12px;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        /* Hover Interaction */
+        .enter-container:hover .dot {
+            background-color: #fff;
+            transform: scale(1.2);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+        }
+
+        .enter-container:hover .enter-text {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Link to the main portfolio file -->
+    <a href="index.html" class="enter-container" aria-label="Enter Site">
+        <div class="dot"></div>
+        <div class="enter-text">Enter</div>
+    </a>
+
+</body>
+</html>
