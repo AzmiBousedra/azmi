@@ -373,7 +373,17 @@
         };
 
         // --- MOBILE HORIZONTAL SCROLL LOGIC ONLY ---
+        
+        // Store the scroll listener function reference so we can remove it later
+        let scrollHandler = null;
+
         function initMobileScroll() {
+            // 1. CLEANUP: If we have an existing listener, remove it first.
+            if (scrollHandler) {
+                window.removeEventListener('scroll', scrollHandler);
+                scrollHandler = null;
+            }
+
             if (window.innerWidth > 768) {
                 // Cleanup mobile styles if switching to desktop
                 document.documentElement.style.overflow = '';
@@ -396,11 +406,23 @@
                     document.body.style.height = (scrollDistance + viewHeight) + 'px';
                     document.body.style.overflow = 'visible';
                     
-                    window.addEventListener('scroll', () => {
-                        const scrollTop = window.scrollY;
-                        const xMove = Math.min(scrollDistance, Math.max(0, scrollTop));
-                        imgContainer.style.transform = `translate3d(${-xMove}px, 0, 0)`;
-                    });
+                    // 2. OPTIMIZATION: Use a 'ticking' flag to sync with the screen refresh rate
+                    let ticking = false;
+
+                    scrollHandler = () => {
+                        if (!ticking) {
+                            window.requestAnimationFrame(() => {
+                                const scrollTop = window.scrollY;
+                                const xMove = Math.min(scrollDistance, Math.max(0, scrollTop));
+                                imgContainer.style.transform = `translate3d(${-xMove}px, 0, 0)`;
+                                ticking = false;
+                            });
+                            ticking = true;
+                        }
+                    };
+
+                    // 3. PASSIVE: Tells browser this scroll event won't cancel the scroll, improving performance
+                    window.addEventListener('scroll', scrollHandler, { passive: true });
                 }
             });
         }
@@ -408,7 +430,6 @@
         window.addEventListener('load', initMobileScroll);
         
         // OPTIMIZATION: Only reload scroll logic if width changes.
-        // This prevents the address bar show/hide from resetting the script.
         let lastWidth = window.innerWidth;
         window.addEventListener('resize', () => {
             if (window.innerWidth !== lastWidth) {
