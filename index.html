@@ -122,11 +122,13 @@
             transition: background-color 0.3s ease;
         }
 
+        /* OPTIMIZED ANIMATION: Using transform instead of width/height avoids reflows */
         .dot::before {
             content: '';
             position: absolute;
             top: 50%;
             left: 50%;
+            /* Start centered */
             transform: translate(-50%, -50%);
             width: 100%;
             height: 100%;
@@ -134,11 +136,19 @@
             background-color: var(--pulse-color);
             animation: pulse 2s infinite;
             z-index: -1;
+            /* Hint browser to optimize this layer */
+            will-change: transform, opacity;
         }
 
         @keyframes pulse {
-            0% { width: 100%; height: 100%; opacity: 0.8; }
-            100% { width: 300%; height: 300%; opacity: 0; }
+            0% { 
+                transform: translate(-50%, -50%) scale(1); 
+                opacity: 0.8; 
+            }
+            100% { 
+                transform: translate(-50%, -50%) scale(3); 
+                opacity: 0; 
+            }
         }
 
         .label {
@@ -396,9 +406,15 @@
         }
 
         window.addEventListener('load', initMobileScroll);
+        
+        // OPTIMIZATION: Only reload scroll logic if width changes.
+        // This prevents the address bar show/hide from resetting the script.
+        let lastWidth = window.innerWidth;
         window.addEventListener('resize', () => {
-            // Simple debounce or just reload logic
-            initMobileScroll(); 
+            if (window.innerWidth !== lastWidth) {
+                lastWidth = window.innerWidth;
+                initMobileScroll(); 
+            }
         });
     </script>
 </body>
