@@ -7,7 +7,7 @@
     <style>
         :root {
             --dot-size: 16px;
-            --dot-color: rgba(255, 255, 255, 0.805);
+            --dot-color: rgba(255, 255, 255, 0.66);
             --pulse-color: rgba(255, 255, 255, 0.4);
             --text-bg: rgba(255, 255, 255, 0.198);
             --img-ar: 2657 / 1412;
@@ -38,7 +38,6 @@
 
         .image-container {
             position: absolute;
-            /* REVERTED: Centered positioning for stable desktop view */
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -47,7 +46,6 @@
             aspect-ratio: var(--img-ar); 
             box-shadow: 0 0 50px rgba(0,0,0,0.5);
             will-change: transform;
-            /* REVERTED: Smooth transition for hover zoom effects */
             transition: transform 1.8s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
@@ -83,9 +81,11 @@
                 transition: none; 
             }
             
+            /* EXIT SIDEBAR OVERRIDE (Commented Out)
             #exit-sidebar:hover ~ .layout-wrapper .image-container {
                 transform: translateX(15px) !important;
             }
+            */
         }
 
         .portfolio-image {
@@ -122,13 +122,11 @@
             transition: background-color 0.3s ease;
         }
 
-        /* OPTIMIZED ANIMATION: Using transform instead of width/height avoids reflows */
         .dot::before {
             content: '';
             position: absolute;
             top: 50%;
             left: 50%;
-            /* Start centered */
             transform: translate(-50%, -50%);
             width: 100%;
             height: 100%;
@@ -136,7 +134,6 @@
             background-color: var(--pulse-color);
             animation: pulse 2s infinite;
             z-index: -1;
-            /* Hint browser to optimize this layer */
             will-change: transform, opacity;
         }
 
@@ -188,6 +185,8 @@
         #link-github { top: 32.9%; left: 70.3%; }
         #link-soon { top: 82.8%; left: 88.8%; }
 
+        /* --- EXIT SIDEBAR (Commented Out) --- */
+        /*
         #exit-sidebar {
             position: fixed;
             top: 0;
@@ -218,15 +217,18 @@
         #exit-sidebar:hover::before {
             opacity: 1;
         }
+        */
 
-        /* Desktop specific hover override for Exit Sidebar */
+        /* Desktop specific hover override for Exit Sidebar (Commented Out) */
+        /*
         @media (min-width: 769px) {
             #exit-sidebar:hover ~ .layout-wrapper .image-container {
-                /* REVERTED: Standard transform for the zoom effect */
                 transform: translate(-50%, -50%) scale(1.03) translateX(15px);
             }
         }
+        */
 
+        /*
         .exit-text {
             position: absolute;
             top: 50%;
@@ -247,6 +249,7 @@
             opacity: 1;
             transform: translateY(-50%) translateX(0);
         }
+        */
 
         /* --- INSTRUCTION LABEL --- */
         .instruction-label {
@@ -288,8 +291,8 @@
             .hotspot:active .label, .hotspot:focus .label {
                 display: block; opacity: 1; transform: translateX(0);
             }
-            #exit-sidebar:hover::before { width: 50vw; }
-            .exit-text { font-size: 14px; }
+            /* #exit-sidebar:hover::before { width: 50vw; } */
+            /* .exit-text { font-size: 14px; } */
 
             /* Swap text for mobile */
             .desktop-text { display: none; }
@@ -299,10 +302,12 @@
 </head>
 <body>
 
-    <!-- EXIT OVERLAY -->
+    <!-- EXIT OVERLAY (Commented Out) -->
+    <!--
     <a href="home.html" id="exit-sidebar" aria-label="Exit Portfolio">
         <span class="exit-text">Exit</span>
     </a>
+    -->
 
     <!-- INSTRUCTION LABEL -->
     <div class="instruction-label">
@@ -374,18 +379,15 @@
 
         // --- MOBILE HORIZONTAL SCROLL LOGIC ONLY ---
         
-        // Store the scroll listener function reference so we can remove it later
         let scrollHandler = null;
 
         function initMobileScroll() {
-            // 1. CLEANUP: If we have an existing listener, remove it first.
             if (scrollHandler) {
                 window.removeEventListener('scroll', scrollHandler);
                 scrollHandler = null;
             }
 
             if (window.innerWidth > 768) {
-                // Cleanup mobile styles if switching to desktop
                 document.documentElement.style.overflow = '';
                 document.body.style.height = '';
                 document.body.style.overflow = '';
@@ -406,7 +408,6 @@
                     document.body.style.height = (scrollDistance + viewHeight) + 'px';
                     document.body.style.overflow = 'visible';
                     
-                    // 2. OPTIMIZATION: Use a 'ticking' flag to sync with the screen refresh rate
                     let ticking = false;
 
                     scrollHandler = () => {
@@ -421,7 +422,6 @@
                         }
                     };
 
-                    // 3. PASSIVE: Tells browser this scroll event won't cancel the scroll, improving performance
                     window.addEventListener('scroll', scrollHandler, { passive: true });
                 }
             });
@@ -429,7 +429,6 @@
 
         window.addEventListener('load', initMobileScroll);
         
-        // OPTIMIZATION: Only reload scroll logic if width changes.
         let lastWidth = window.innerWidth;
         window.addEventListener('resize', () => {
             if (window.innerWidth !== lastWidth) {
