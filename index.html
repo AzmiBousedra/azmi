@@ -20,7 +20,7 @@
             height: 100%;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             background-color: #1a1a1a;
-            overflow: hidden;
+            overflow: hidden; /* Default for desktop */
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
@@ -33,7 +33,7 @@
             position: relative;
             width: 100vw;
             height: 100vh;
-            overflow: hidden;
+            overflow: hidden; /* Default for desktop */
         }
 
         .image-container {
@@ -56,24 +56,21 @@
             }
         }
 
-        /* ------- NEW MOBILE MODE (native horizontal scroll) ------- */
+        /* ------- MOBILE MODE (Native Horizontal Scroll) ------- */
         @media (max-width: 768px) {
-            html, body {
-                overflow-x: auto;
-                overflow-y: hidden;
-                -webkit-overflow-scrolling: touch;
+            /* 1. Setup Scroll Container */
+            .layout-wrapper {
                 width: 100%;
                 height: 100%;
+                overflow-x: auto; /* Enable native horizontal scroll here */
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+                pointer-events: auto;
             }
 
-            .layout-wrapper {
-                position: relative;
-                width: 100%;
-                height: 100%;
-                overflow-x: auto;
-                overflow-y: hidden;
-                -webkit-overflow-scrolling: touch;
-                pointer-events: auto;
+            /* Remove scroll from body to avoid double scrollbars */
+            html, body {
+                overflow: hidden; 
             }
 
             .image-container {
@@ -82,20 +79,29 @@
                 left: 0;
                 transform: none;
                 height: 100vh;
-                width: auto;
+                width: auto; /* Allow width to expand naturally */
                 transition: none; 
-            }
-
-            .dot {
-                transition: all 0.3s ease;
-            }
-
-            .label {
-                transition: all 0.3s ease;
             }
 
             .desktop-text { display: none; }
             .mobile-text { display: inline; }
+
+            /* 2. Styles for the 'Active' state on mobile */
+            /* These trigger when the JS adds the .is-active class */
+            .hotspot.is-active .label {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            .hotspot.is-active .dot {
+                background-color: #fff;
+                box-shadow: 0 0 15px rgba(255,255,255,0.6);
+            }
+
+            /* Smooth transition for these states */
+            .dot, .label {
+                transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+            }
         }
 
         .portfolio-image {
@@ -154,7 +160,7 @@
             }
             100% { 
                 transform: translate(-50%, -50%) scale(3); 
-            opacity: 0; 
+                opacity: 0; 
             }
         }
 
@@ -229,6 +235,7 @@
         <span class="mobile-text">Scroll to explore</span>
     </div>
 
+    <!-- layout-wrapper acts as the scroll container on mobile -->
     <div class="layout-wrapper">
         <div class="image-container">
             <img src="bg.png" alt="Workspace Portfolio" class="portfolio-image" id="main-bg">
@@ -271,5 +278,59 @@
         </div>
     </div>
 
+    <script>
+        const img = document.getElementById('main-bg');
+        img.onerror = function() {
+            console.log("bg.png not found.");
+            // Optional: fallback logic here
+        };
+
+        // --- NEW MOBILE LOGIC FOR NATIVE SCROLL ---
+        function initMobileLogic() {
+            const wrapper = document.querySelector('.layout-wrapper');
+            const hotspots = document.querySelectorAll('.hotspot');
+            
+            // Only run if we are in mobile layout (width < 768px)
+            if (window.innerWidth > 768) {
+                // Cleanup: remove active classes on desktop so hover works normally
+                hotspots.forEach(el => el.classList.remove('is-active'));
+                return;
+            }
+
+            // Margin from edge where dots become inactive (e.g. 50px)
+            const edgeMargin = 50;
+
+            function checkVisibility() {
+                const viewWidth = window.innerWidth;
+                
+                hotspots.forEach(spot => {
+                    // getBoundingClientRect returns position relative to the VIEWPORT
+                    // This works perfectly with native scrolling
+                    const rect = spot.getBoundingClientRect();
+                    const screenX = rect.left;
+
+                    // Check if dot is within the central "active" zone of the screen
+                    const isActive = screenX > edgeMargin && screenX < (viewWidth - edgeMargin);
+
+                    if (isActive) {
+                        spot.classList.add('is-active');
+                    } else {
+                        spot.classList.remove('is-active');
+                    }
+                });
+            }
+
+            // Listen to scroll on the wrapper (since it has overflow-x: auto)
+            wrapper.addEventListener('scroll', () => {
+                requestAnimationFrame(checkVisibility);
+            }, { passive: true });
+
+            // Initial check
+            checkVisibility();
+        }
+
+        window.addEventListener('load', initMobileLogic);
+        window.addEventListener('resize', initMobileLogic);
+    </script>
 </body>
 </html>
