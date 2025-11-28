@@ -99,8 +99,14 @@
             }
 
             /* Smooth transition for these states (Restored to 1.8s) */
-            .dot, .label {
-                transition: all 1.8s cubic-bezier(0.19, 1, 0.22, 1);
+            /* Explicitly listing properties helps browser optimize transitions */
+            .dot {
+                transition: background-color 1.8s cubic-bezier(0.19, 1, 0.22, 1), 
+                            box-shadow 1.8s cubic-bezier(0.19, 1, 0.22, 1);
+            }
+            .label {
+                transition: opacity 1.8s cubic-bezier(0.19, 1, 0.22, 1), 
+                            transform 1.8s cubic-bezier(0.19, 1, 0.22, 1);
             }
         }
 
@@ -297,11 +303,15 @@
                 return;
             }
 
-            // Margin from edge where dots become inactive (e.g. 50px)
-            const edgeMargin = 50;
+            // *** CONFIG: Active Window Extremities ***
+            // This defines the "dead zone" on the sides of the screen.
+            // 0.20 means 20% of the screen width on the left and 20% on the right are inactive.
+            // Dots only glow when they are in the center 60% of the screen.
+            const INACTIVE_ZONE_RATIO = 0.20; 
 
             function checkVisibility() {
                 const viewWidth = window.innerWidth;
+                const edgeMargin = viewWidth * INACTIVE_ZONE_RATIO;
                 
                 hotspots.forEach(spot => {
                     // getBoundingClientRect returns position relative to the VIEWPORT
