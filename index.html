@@ -306,21 +306,33 @@
             // *** CONFIG: Active Window Extremities ***
             // This defines the "dead zone" on the sides of the screen.
             // 0.20 means 20% of the screen width on the left and 20% on the right are inactive.
-            // Dots only glow when they are in the center 60% of the screen.
             const INACTIVE_ZONE_RATIO = 0.075; 
 
             function checkVisibility() {
                 const viewWidth = window.innerWidth;
                 const edgeMargin = viewWidth * INACTIVE_ZONE_RATIO;
                 
+                // --- NEW: DETECT SCROLL EXTREMITIES ---
+                const scrollLeft = wrapper.scrollLeft;
+                const maxScroll = wrapper.scrollWidth - wrapper.clientWidth;
+                
+                // Define a small tolerance (e.g. 10px) to consider "at the edge"
+                const isAtStart = scrollLeft < 10; 
+                const isAtEnd = scrollLeft > (maxScroll - 10);
+
                 hotspots.forEach(spot => {
-                    // getBoundingClientRect returns position relative to the VIEWPORT
-                    // This works perfectly with native scrolling
                     const rect = spot.getBoundingClientRect();
                     const screenX = rect.left;
 
-                    // Check if dot is within the central "active" zone of the screen
-                    const isActive = screenX > edgeMargin && screenX < (viewWidth - edgeMargin);
+                    // Standard condition: Dot must be strictly between the margins
+                    // Modified condition: 
+                    //   If at start (Left edge), ignore the left margin requirement
+                    //   If at end (Right edge), ignore the right margin requirement
+                    
+                    const passLeft = isAtStart ? true : (screenX > edgeMargin);
+                    const passRight = isAtEnd ? true : (screenX < (viewWidth - edgeMargin));
+                    
+                    const isActive = passLeft && passRight;
 
                     if (isActive) {
                         spot.classList.add('is-active');
