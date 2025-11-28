@@ -294,7 +294,7 @@
         // --- NEW MOBILE LOGIC FOR NATIVE SCROLL ---
         function initMobileLogic() {
             const wrapper = document.querySelector('.layout-wrapper');
-            const hotspots = document.querySelectorAll('.hotspot');
+            const hotspots = Array.from(document.querySelectorAll('.hotspot'));
             
             // Only run if we are in mobile layout (width < 768px)
             if (window.innerWidth > 768) {
@@ -303,34 +303,45 @@
                 return;
             }
 
+            // 1. Identify Leftmost and Rightmost Hotspots
+            let leftMostSpot = null;
+            let rightMostSpot = null;
+            let minLeft = Infinity;
+            let maxLeft = -Infinity;
+
+            hotspots.forEach(spot => {
+                const leftVal = spot.offsetLeft;
+                if (leftVal < minLeft) {
+                    minLeft = leftVal;
+                    leftMostSpot = spot;
+                }
+                if (leftVal > maxLeft) {
+                    maxLeft = leftVal;
+                    rightMostSpot = spot;
+                }
+            });
+
             // *** CONFIG: Active Window Extremities ***
             // This defines the "dead zone" on the sides of the screen.
-            // 0.20 means 20% of the screen width on the left and 20% on the right are inactive.
             const INACTIVE_ZONE_RATIO = 0.075; 
 
             function checkVisibility() {
                 const viewWidth = window.innerWidth;
                 const edgeMargin = viewWidth * INACTIVE_ZONE_RATIO;
                 
-                // --- NEW: DETECT SCROLL EXTREMITIES ---
-                const scrollLeft = wrapper.scrollLeft;
-                const maxScroll = wrapper.scrollWidth - wrapper.clientWidth;
-                
-                // Define a small tolerance (e.g. 10px) to consider "at the edge"
-                const isAtStart = scrollLeft < 10; 
-                const isAtEnd = scrollLeft > (maxScroll - 10);
-
                 hotspots.forEach(spot => {
                     const rect = spot.getBoundingClientRect();
                     const screenX = rect.left;
 
-                    // Standard condition: Dot must be strictly between the margins
-                    // Modified condition: 
-                    //   If at start (Left edge), ignore the left margin requirement
-                    //   If at end (Right edge), ignore the right margin requirement
-                    
-                    const passLeft = isAtStart ? true : (screenX > edgeMargin);
-                    const passRight = isAtEnd ? true : (screenX < (viewWidth - edgeMargin));
+                    // Condition 1: Check left boundary
+                    // If it's the leftmost dot, ignore the left margin check (it stays active on left edge)
+                    // Otherwise, it must be to the right of the edge margin
+                    const passLeft = (spot === leftMostSpot) ? true : (screenX > edgeMargin);
+
+                    // Condition 2: Check right boundary
+                    // If it's the rightmost dot, ignore the right margin check (it stays active on right edge)
+                    // Otherwise, it must be to the left of the edge margin
+                    const passRight = (spot === rightMostSpot) ? true : (screenX < (viewWidth - edgeMargin));
                     
                     const isActive = passLeft && passRight;
 
