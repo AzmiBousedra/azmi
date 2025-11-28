@@ -49,7 +49,6 @@
             transition: transform 1.8s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
-        /* Desktop: If screen is wider than image aspect ratio, fit width */
         @media (min-aspect-ratio: 2657/1412) {
             .image-container {
                 width: 100vw;
@@ -57,29 +56,46 @@
             }
         }
 
-        /* --- MOBILE SCROLL OVERRIDES --- */
+        /* ------- NEW MOBILE MODE (native horizontal scroll) ------- */
         @media (max-width: 768px) {
-            .layout-wrapper {
-                position: fixed;
-                top: 0;
-                left: 0;
+            html, body {
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
                 width: 100%;
                 height: 100%;
-                pointer-events: none;
             }
-            
-            .layout-wrapper * {
+
+            .layout-wrapper {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
                 pointer-events: auto;
             }
 
             .image-container {
-                left: 0;
+                position: relative;
                 top: 0;
+                left: 0;
                 transform: none;
                 height: 100vh;
                 width: auto;
                 transition: none; 
             }
+
+            .dot {
+                transition: all 0.3s ease;
+            }
+
+            .label {
+                transition: all 0.3s ease;
+            }
+
+            .desktop-text { display: none; }
+            .mobile-text { display: inline; }
         }
 
         .portfolio-image {
@@ -138,7 +154,7 @@
             }
             100% { 
                 transform: translate(-50%, -50%) scale(3); 
-                opacity: 0; 
+            opacity: 0; 
             }
         }
 
@@ -179,9 +195,7 @@
         #link-github { top: 32.9%; left: 70.3%; }
         #link-soon { top: 82.8%; left: 88.8%; }
 
-        /* --- INSTRUCTION LABEL --- */
         .instruction-label {
-            /* Reuse .label styles */
             background-color: var(--text-bg);
             color: #fff;
             padding: 8px 16px;
@@ -192,16 +206,12 @@
             backdrop-filter: blur(4px);
             letter-spacing: 0.5px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            
-            /* Positioning */
             position: fixed;
             top: 40px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 200;
-            pointer-events: none; /* Let clicks pass through */
-
-            /* Animation */
+            pointer-events: none;
             opacity: 0;
             animation: fadeInLabel 1.8s cubic-bezier(0.19, 1, 0.22, 1) 0.5s forwards;
         }
@@ -210,39 +220,10 @@
             0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
             100% { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
-
-        .mobile-text { display: none; }
-
-        @media (max-width: 768px) {
-            /* UPDATED: Add transition to base elements so it animates IN and OUT */
-            .dot {
-                transition: all 1.8s cubic-bezier(0.19, 1, 0.22, 1);
-            }
-            .label {
-                transition: all 1.8s cubic-bezier(0.19, 1, 0.22, 1);
-            }
-
-            /* Only apply 'active' styles when the .is-active class is present */
-            .hotspot.is-active .dot { 
-                width: 20px; 
-                height: 20px;
-                background-color: #fff;
-                box-shadow: 0 0 15px rgba(255,255,255,0.6);
-            }
-            
-            .hotspot.is-active .label {
-                opacity: 1;
-                transform: translateX(0);
-            }
-            
-            .desktop-text { display: none; }
-            .mobile-text { display: inline; }
-        }
     </style>
 </head>
 <body>
 
-    <!-- INSTRUCTION LABEL -->
     <div class="instruction-label">
         <span class="desktop-text">Hover the dots to explore</span>
         <span class="mobile-text">Scroll to explore</span>
@@ -252,38 +233,37 @@
         <div class="image-container">
             <img src="bg.png" alt="Workspace Portfolio" class="portfolio-image" id="main-bg">
 
-            <a href="https://comments4.me" class="hotspot" id="link-comments4me" aria-label="My Projects">
+            <a href="https://comments4.me" class="hotspot" id="link-comments4me">
                 <span class="dot"></span>
                 <span class="label">Comments4Me</span>
             </a>
 
-            <a href="https://github.com/AzmiBousedra/TuneWear" class="hotspot" id="link-tunewear" aria-label="About Me">
+            <a href="https://github.com/AzmiBousedra/TuneWear" class="hotspot" id="link-tunewear">
                 <span class="dot"></span>
                 <span class="label">TuneWear</span>
             </a>
 
-            <a href="https://www.linkedin.com/in/azmibousedra" class="hotspot" id="link-contact" aria-label="Contact Me">
+            <a href="https://www.linkedin.com/in/azmibousedra" class="hotspot" id="link-contact">
                 <span class="dot"></span>
                 <span class="label">Contact</span>
             </a>
 
-            <a href="#resume" class="hotspot" id="link-notes" aria-label="Notes">
+            <a href="#resume" class="hotspot" id="link-notes">
                 <span class="dot"></span>
                 <span class="label">Notes</span>
             </a>
 
-            <!-- HTML Resume Link -->
-            <a href="resume.html" class="hotspot" id="link-resume" aria-label="View Resume">
+            <a href="resume.html" class="hotspot" id="link-resume">
                 <span class="dot"></span>
                 <span class="label">Resume</span>
             </a>
 
-            <a href="https://github.com/azmibousedra" class="hotspot" id="link-github" aria-label="GitHub">
+            <a href="https://github.com/azmibousedra" class="hotspot" id="link-github">
                 <span class="dot"></span>
                 <span class="label">GitHub</span>
             </a>
 
-            <a href="#coming-soon" class="hotspot" id="link-soon" aria-label="Coming Soon">
+            <a href="#coming-soon" class="hotspot" id="link-soon">
                 <span class="dot"></span>
                 <span class="label">Soon</span>
             </a>
@@ -291,119 +271,5 @@
         </div>
     </div>
 
-    <script>
-        const img = document.getElementById('main-bg');
-        img.onerror = function() {
-            console.log("bg.png not found.");
-            img.style.display = 'none';
-            const container = document.querySelector('.image-container');
-            container.style.width = '100vw'; 
-            container.style.height = '100vh';
-            container.style.background = 'linear-gradient(135deg, #2b2b2b 0%, #1a1a1a 100%)';
-            container.style.display = 'flex';
-            container.style.alignItems = 'center';
-            container.style.justifyContent = 'center';
-            
-            const msg = document.createElement('div');
-            msg.style.color = 'rgba(255,255,255,0.5)';
-            msg.innerText = "Image 'bg.png' not found. Ensure it is in the same folder.";
-            container.appendChild(msg);
-        };
-
-        // --- MOBILE HORIZONTAL SCROLL LOGIC ---
-        
-        let scrollHandler = null;
-
-        function initMobileScroll() {
-            if (scrollHandler) {
-                window.removeEventListener('scroll', scrollHandler);
-                scrollHandler = null;
-            }
-
-            if (window.innerWidth > 768) {
-                document.documentElement.style.overflow = '';
-                document.body.style.height = '';
-                document.body.style.overflow = '';
-                // Clean up any active classes if resizing to desktop
-                document.querySelectorAll('.hotspot').forEach(el => el.classList.remove('is-active'));
-                return;
-            }
-
-            const imgContainer = document.querySelector('.image-container');
-            const hotspots = document.querySelectorAll('.hotspot');
-            
-            requestAnimationFrame(() => {
-                const imgWidth = imgContainer.offsetWidth;
-                const viewWidth = window.innerWidth;
-                const viewHeight = window.innerHeight;
-
-                // Pre-calculate positions to avoid heavy math in scroll loop
-                const hotspotData = Array.from(hotspots).map(spot => {
-                    // Extract left percentage from inline style or CSS logic
-                    // Since we know the IDs, we can map them, or simpler:
-                    // Use getComputedStyle (runs once on init)
-                    const leftStr = window.getComputedStyle(spot).left;
-                    const leftPx = parseFloat(leftStr); // This is relative to container
-                    return { el: spot, x: leftPx };
-                });
-
-                // Margin from edge where dots become inactive (e.g., 60px)
-                const edgeMargin = 60;
-
-                if (imgWidth > viewWidth) {
-                    const scrollDistance = imgWidth - viewWidth;
-                    document.documentElement.style.overflow = 'auto';
-                    document.documentElement.style.height = 'auto';
-                    document.body.style.height = (scrollDistance + viewHeight) + 'px';
-                    document.body.style.overflow = 'visible';
-                    
-                    let ticking = false;
-
-                    scrollHandler = () => {
-                        if (!ticking) {
-                            window.requestAnimationFrame(() => {
-                                const scrollTop = window.scrollY;
-                                const xMove = Math.min(scrollDistance, Math.max(0, scrollTop));
-                                
-                                // 1. Move Image
-                                imgContainer.style.transform = `translate3d(${-xMove}px, 0, 0)`;
-
-                                // 2. Check Dot Visibility
-                                // A dot is visible if: (dotX - xMove) is within [edgeMargin, viewWidth - edgeMargin]
-                                hotspotData.forEach(data => {
-                                    const screenX = data.x - xMove;
-                                    const isActive = screenX > edgeMargin && screenX < (viewWidth - edgeMargin);
-                                    
-                                    if (isActive) {
-                                        data.el.classList.add('is-active');
-                                    } else {
-                                        data.el.classList.remove('is-active');
-                                    }
-                                });
-
-                                ticking = false;
-                            });
-                            ticking = true;
-                        }
-                    };
-
-                    window.addEventListener('scroll', scrollHandler, { passive: true });
-                    
-                    // Trigger once immediately to set initial state
-                    scrollHandler();
-                }
-            });
-        }
-
-        window.addEventListener('load', initMobileScroll);
-        
-        let lastWidth = window.innerWidth;
-        window.addEventListener('resize', () => {
-            if (window.innerWidth !== lastWidth) {
-                lastWidth = window.innerWidth;
-                initMobileScroll(); 
-            }
-        });
-    </script>
 </body>
 </html>
