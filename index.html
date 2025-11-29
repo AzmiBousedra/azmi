@@ -145,7 +145,7 @@
             box-shadow: 0 0 15px rgba(255,255,255,0.6);
         }
 
-        #link-comments4me { top: 44%; left: 19.8%; }
+        #link-projects { top: 44%; left: 19.8%; }
         #link-tunewear { top: 55.5%; left: 11.25%; }
         #link-contact { top: 81.8%; left: 72.7%; }
         #link-notes { top: 37%; left: 29.7%; }
@@ -153,7 +153,6 @@
         #link-github { top: 32.9%; left: 70.3%; }
         #link-soon { top: 82.8%; left: 88.8%; }
 
-        /* --- INSTRUCTION LABEL (Base Styles) --- */
         .instruction-label {
             background-color: var(--text-bg);
             color: #fff;
@@ -175,7 +174,7 @@
             animation: fadeInLabel 1.8s cubic-bezier(0.19, 1, 0.22, 1) 0.5s forwards;
         }
 
-        /* Default visibility: Desktop shown, Mobile hidden */
+        /* --- ADDED: Default visibility for text spans --- */
         .mobile-text { display: none; }
         .desktop-text { display: inline; }
 
@@ -239,7 +238,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.6); /* Reduced opacity to show off the blur better */
             backdrop-filter: blur(8px);
             z-index: 10000;
             display: flex;
@@ -266,7 +265,148 @@
             transform: scale(0.95);
             transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            backdrop-filter: blur(12px); /* Added blur to generic modals too */
         }
+
+        /* TERMINAL SPECIFIC OVERRIDES */
+        .terminal-content {
+            width: 600px; /* Slightly wider for better terminal feel */
+            padding: 0; /* Remove default padding to handle header */
+            text-align: left; /* Terminal align */
+            overflow: hidden; /* Clip border radius */
+            
+            /* UPDATED: Hybrid Glassmorphism Terminal Style */
+            background: rgba(20, 20, 20, 0.65); /* Semi-transparent dark */
+            backdrop-filter: blur(20px) saturate(180%); /* Strong blur for glass effect */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace; /* Mac/Linux fonts */
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.05);
+            
+            /* UPDATED: Flex layout to push footer to bottom */
+            display: flex;
+            flex-direction: column;
+            min-height: 300px;
+        }
+
+        .terminal-header {
+            background: rgba(255, 255, 255, 0.03); /* Very subtle header separation */
+            padding: 10px 16px; /* Compact padding */
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            flex-shrink: 0; /* Prevent header shrinking */
+        }
+
+        /* UPDATED: Terminal Button Styles with Hover X */
+        .term-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .term-btn.red { 
+            background: #ff5f56; 
+            cursor: pointer;
+        }
+        
+        /* The 'x' icon using a pseudo-element */
+        .term-btn.red::before {
+            content: '×'; /* Multiplication sign */
+            font-size: 11px; /* Slightly larger for better centering */
+            color: rgba(0, 0, 0, 0.6); /* Dark icon color */
+            opacity: 0;
+            line-height: 1;
+            font-weight: normal; /* Removed bold for cleaner look */
+            pointer-events: none;
+            transition: opacity 0.1s ease;
+            /* Removed padding-bottom to fix vertical alignment */
+        }
+
+        .term-btn.red:hover::before {
+            opacity: 1;
+        }
+
+        .term-btn.yellow { background: #ffbd2e; }
+        .term-btn.green { background: #27c93f; }
+
+        .term-title {
+            margin-left: 12px;
+            font-family: inherit;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.4); /* Subtler title to match glass theme */
+            font-weight: 500;
+            text-align: center;
+            flex-grow: 1; 
+            padding-right: 50px; 
+        }
+
+        .terminal-body {
+            padding: 24px;
+            padding-bottom: 0; /* Remove bottom padding to let footer sit flush */
+            font-family: inherit;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #e0e0e0;
+            flex-grow: 1; /* Allow body to take available space */
+            position: relative;
+        }
+
+        /* UPDATED: Terminal Link Styles - Mac/Linux style */
+        .terminal-link {
+            color: #f0f0f0; /* White/Light Grey text */
+            text-decoration: none;
+            font-weight: 400; /* Normal weight */
+            transition: all 0.2s ease;
+            margin-right: 15px;
+            display: inline-block;
+            cursor: pointer;
+            padding: 0; /* Remove padding to keep text tight */
+        }
+        
+        /* UPDATED: Text Glow Effect on Hover (No Block) */
+        .terminal-link:hover {
+            color: #fff; /* Pure white */
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4);
+            background-color: transparent; /* Ensure no block background */
+        }
+
+        /* TERMINAL STATUS BAR (Updated: Monochrome & Positioned) */
+        .terminal-footer {
+            /* Removed margin-top to sit flush at bottom if content pushes it, 
+               or sits at bottom due to flex-grow on body */
+            padding: 6px 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #888; /* Minimalist Grey */
+            font-size: 11px;
+            min-height: 1.6em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            margin-top: auto; /* Pushes footer to the bottom of the flex container */
+        }
+
+        /* UPDATED: Monochrome Color Palette */
+        .prompt { color: #777; margin-right: 8px; font-weight: normal; } /* Dark Grey Prompt */
+        .path { color: #fff; margin-right: 8px; font-weight: normal; } /* White Path */
+        .output { color: #ccc; margin-bottom: 10px; display: block; } /* Light Grey Output */
+        
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background: #aaa; /* Soft Grey Cursor */
+            animation: blink 1s infinite;
+            vertical-align: middle;
+            margin-left: 4px;
+        }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
         .modal-overlay.open .modal-content {
             transform: scale(1);
@@ -345,32 +485,41 @@
 </head>
 <body>
 
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <div class="loader-dot"></div>
+    </div>
+
     <div class="instruction-label">
         <span class="desktop-text">Hover the dots to explore</span>
         <span class="mobile-text">Scroll horizontally to explore</span>
     </div>
 
     <!-- layout-wrapper acts as the scroll container on mobile -->
-    <div class="layout-wrapper">
+    <div class="layout-wrapper" id="content-wrapper">
         <div class="image-container">
             <img src="bg.png" alt="Workspace Portfolio" class="portfolio-image" id="main-bg">
 
-            <a href="https://comments4.me" class="hotspot" id="link-comments4me">
+            <!-- CHANGED: Replaced Comments4Me link with Projects Modal Trigger -->
+            <a href="#" class="hotspot" id="link-projects" onclick="openProjectsModal(event)">
                 <span class="dot"></span>
-                <span class="label">Comments4Me</span>
+                <span class="label">Projects</span>
             </a>
 
+            <!--
             <a href="https://github.com/AzmiBousedra/TuneWear" class="hotspot" id="link-tunewear">
                 <span class="dot"></span>
                 <span class="label">TuneWear</span>
             </a>
+            -->
 
-            <a href="https://www.linkedin.com/in/azmibousedra" class="hotspot" id="link-contact">
+            <!-- Triggers Contact Modal -->
+            <a href="#" class="hotspot" id="link-contact" onclick="openContactModal(event)">
                 <span class="dot"></span>
                 <span class="label">Contact</span>
             </a>
 
-            <!-- Updated: Triggers the Modal -->
+            <!-- Triggers the Notes Modal -->
             <a href="#" class="hotspot" id="link-notes" onclick="openNotesModal(event)">
                 <span class="dot"></span>
                 <span class="label">Notes</span>
@@ -386,56 +535,218 @@
                 <span class="label">GitHub</span>
             </a>
 
-            <a href="#coming-soon" class="hotspot" id="link-soon">
+            <!-- Triggers the Terminal Modal (Soon) -->
+             <!--
+            <a href="#" class="hotspot" id="link-soon" onclick="openTerminalModal(event)">
                 <span class="dot"></span>
                 <span class="label">Soon</span>
             </a>
+            -->
 
         </div>
     </div>
 
-    <!-- MODAL STRUCTURE -->
+    <!-- NOTES MODAL STRUCTURE -->
     <div id="notes-modal" class="modal-overlay" onclick="closeNotesModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <h3>Access Notes (Upload Soon)</h3>
+            <h3>Access Notes</h3>
             <div class="modal-options">
-                <a href="" target="_blank" class="modal-option">
+                <a href="resume.pdf" target="_blank" class="modal-option">
                     <span class="dot-small"></span>
-                    <span class="option-text">Git_Cheat_Sheet.pdf</span>
+                    <span class="option-text">Git-Notes.pdf</span>
                 </a>
-                <a href="" target="_blank" class="modal-option">
+                <a href="resume.pdf" target="_blank" class="modal-option">
                     <span class="dot-small"></span>
-                    <span class="option-text">Calc_3_Guide.pdf</span>
+                    <span class="option-text">Calc-3-heatSheet.pdf</span>
                 </a>
-                <a href="" target="_blank" class="modal-option">
+                <a href="resume.pdf" target="_blank" class="modal-option">
                     <span class="dot-small"></span>
-                    <span class="option-text">ESP32_Boards_Makers.pdf</span>
+                    <span class="option-text">ESP-Board-Makers.pdf</span>
                 </a>
             </div>
             <button class="close-modal" onclick="closeNotesModal()">Close</button>
         </div>
     </div>
 
+    <!-- CONTACT MODAL STRUCTURE -->
+    <div id="contact-modal" class="modal-overlay" onclick="closeContactModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h3>Get in Touch</h3>
+            <div class="modal-options">
+                <div class="modal-option" onclick="copyEmail()">
+                    <span class="dot-small"></span>
+                    <span class="option-text" id="email-text">a_boused@live.concordia.ca</span>
+                </div>
+                <a href="https://linkedin.com/in/azmibousedra" target="_blank" class="modal-option">
+                    <span class="dot-small"></span>
+                    <span class="option-text">LinkedIn</span>
+                </a>
+              
+            </div>
+            <button class="close-modal" onclick="closeContactModal()">Close</button>
+        </div>
+    </div>
+
+    <!-- NEW PROJECTS TERMINAL MODAL -->
+    <div id="projects-modal" class="modal-overlay" onclick="closeProjectsModal(event)">
+        <div class="modal-content terminal-content" onclick="event.stopPropagation()">
+            <!-- Fake Terminal Header -->
+            <div class="terminal-header">
+                <div class="term-btn red" onclick="closeProjectsModal()"></div>
+                <div class="term-btn yellow"></div>
+                <div class="term-btn green"></div>
+                <span class="term-title">azmi@portfolio: ~/projects</span>
+            </div>
+            <!-- Terminal Body -->
+            <div class="terminal-body">
+                <div><span class="prompt">➜</span> <span class="path">~/projects</span> ls -1</div>
+                <div class="output">
+                    <!-- Dynamic Links with Data Attributes for Skills -->
+                    <a href="https://comments4.me" target="_blank" class="terminal-link" data-skills="[STACK] HTML, CSS, JS, API, NodeJS, PrismJS">Comments4Me</a><br>
+                    <a href="https://github.com/AzmiBousedra/TuneWear" target="_blank" class="terminal-link" data-skills="[STACK] C++, ESP32, API">TuneWear</a><br>
+                    
+                    <span style="color: #777; font-size: 0.9em; margin-top: 10px; display: inline-block;"># Hover file to see tech stack...</span>
+                </div>
+                <div><span class="prompt">➜</span> <span class="path">~/projects</span> <span class="cursor"></span></div>
+            </div>
+            <!-- Moved Footer OUT of body, visually at bottom via flex -->
+            <div class="terminal-footer">
+                <span id="project-skills">-- INSERT MODE --</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- TERMINAL MODAL STRUCTURE (Logs/Updates) -->
+    <div id="terminal-modal" class="modal-overlay" onclick="closeTerminalModal(event)">
+        <div class="modal-content terminal-content" onclick="event.stopPropagation()">
+            <!-- Fake Terminal Header -->
+            <div class="terminal-header">
+                <div class="term-btn red" onclick="closeTerminalModal()"></div>
+                <div class="term-btn yellow"></div>
+                <div class="term-btn green"></div>
+                <span class="term-title">azmi@portfolio: ~/logs</span>
+            </div>
+            <!-- Terminal Body -->
+            <div class="terminal-body">
+                <div><span class="prompt">➜</span> <span class="path">~</span> cat logs.txt</div>
+                <div class="output">
+                    [TODO] Build TuneWear Repo...<br>
+                    [TODO] Find Stack for Next Project.<br>
+                    [DONE] Register for ConUHacks.<br>
+                    <br>
+                    > More updates coming soon.
+                </div>
+                <div><span class="prompt">➜</span> <span class="path">~</span> <span class="cursor"></span></div>
+            </div>
+            <!-- Footer for Logs (Consistent style) -->
+            <div class="terminal-footer">
+                <span>-- LOGGING --</span>
+            </div>
+        </div>
+    </div>
+
     <script>
         const img = document.getElementById('main-bg');
-        img.onerror = function() {
-            console.log("bg.png not found.");
-            // Optional: fallback logic here
-        };
+        
+        // --- PRELOADER LOGIC ---
+        function hidePreloader() {
+            const preloader = document.getElementById('preloader');
+            const content = document.getElementById('content-wrapper');
+            
+            preloader.classList.add('hidden');
+            content.classList.add('loaded');
+            
+            setTimeout(() => {
+                preloader.style.display = 'none';
+            }, 800);
+        }
 
-        // --- MODAL LOGIC ---
+        if (img.complete) {
+            hidePreloader();
+        } else {
+            img.onload = hidePreloader;
+            img.onerror = hidePreloader;
+        }
+
+        setTimeout(hidePreloader, 3000);
+
+
+        // --- NOTES MODAL LOGIC ---
         function openNotesModal(e) {
-            e.preventDefault(); // Prevent default anchor jump
+            e.preventDefault(); 
             document.getElementById('notes-modal').classList.add('open');
         }
 
         function closeNotesModal(e) {
-            // Close if clicking overlay or close button
             document.getElementById('notes-modal').classList.remove('open');
         }
 
-        // Note: Logic for 'inactive zones' and scroll detection removed
-        // since dots are now permanently active on mobile via CSS.
+        // --- CONTACT MODAL LOGIC ---
+        function openContactModal(e) {
+            e.preventDefault();
+            document.getElementById('contact-modal').classList.add('open');
+        }
+
+        function closeContactModal(e) {
+            document.getElementById('contact-modal').classList.remove('open');
+        }
+
+        function copyEmail() {
+            const email = "youremail@example.com";
+            const textEl = document.getElementById('email-text');
+            
+            navigator.clipboard.writeText(email).then(() => {
+                const original = textEl.innerText;
+                textEl.innerText = "Copied to clipboard!";
+                setTimeout(() => {
+                    textEl.innerText = original;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // --- PROJECTS TERMINAL MODAL LOGIC (New) ---
+        function openProjectsModal(e) {
+            e.preventDefault();
+            document.getElementById('projects-modal').classList.add('open');
+        }
+
+        function closeProjectsModal(e) {
+            document.getElementById('projects-modal').classList.remove('open');
+        }
+
+        // --- UPDATES TERMINAL MODAL LOGIC ---
+        function openTerminalModal(e) {
+            e.preventDefault();
+            document.getElementById('terminal-modal').classList.add('open');
+        }
+
+        function closeTerminalModal(e) {
+            document.getElementById('terminal-modal').classList.remove('open');
+        }
+
+        // --- TERMINAL SKILL HOVER LOGIC ---
+        // Setup hover listeners for project links
+        const skillLinks = document.querySelectorAll('.terminal-link');
+        const skillDisplay = document.getElementById('project-skills');
+
+        skillLinks.forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                const skills = link.getAttribute('data-skills');
+                if (skills && skillDisplay) {
+                    skillDisplay.innerText = skills;
+                    skillDisplay.style.color = "#fff"; // Make text brighter on hover
+                }
+            });
+
+            link.addEventListener('mouseleave', () => {
+                if (skillDisplay) {
+                    skillDisplay.innerText = "-- INSERT MODE --"; // Default Vim-like text
+                    skillDisplay.style.color = "#888"; // Reset to grey
+                }
+            });
+        });
     </script>
 </body>
 </html>
