@@ -56,55 +56,6 @@
             }
         }
 
-        /* ------- MOBILE MODE (Native Horizontal Scroll) ------- */
-        @media (max-width: 768px) {
-            /* 1. Setup Scroll Container */
-            .layout-wrapper {
-                width: 100%;
-                height: 100%;
-                overflow-x: auto; /* Enable native horizontal scroll here */
-                overflow-y: hidden;
-                -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
-                pointer-events: auto;
-            }
-
-            /* Remove scroll from body to avoid double scrollbars */
-            html, body {
-                overflow: hidden; 
-            }
-
-            .image-container {
-                position: relative;
-                top: 0;
-                left: 0;
-                transform: none;
-                height: 100vh;
-                width: auto; /* Allow width to expand naturally */
-                transition: none; 
-            }
-
-            .desktop-text { display: none; }
-            .mobile-text { display: inline !important; } /* Force display on mobile */
-
-            /* 2. PERMANENT ACTIVE STATE FOR MOBILE */
-            /* Dots and Labels are always in their 'hover' state */
-            
-            .label {
-                opacity: 1 !important; /* Force visible */
-                transform: translateX(0) !important; /* Force position */
-            }
-
-            .dot {
-                background-color: #fff !important; /* Force bright white */
-                box-shadow: 0 0 15px rgba(255,255,255,0.6) !important; /* Force glow */
-            }
-
-            /* Optional: Keep smooth transition if resizing window */
-            .dot, .label {
-                transition: all 1.8s cubic-bezier(0.19, 1, 0.22, 1);
-            }
-        }
-
         .portfolio-image {
             display: block;
             width: 100%;
@@ -202,6 +153,7 @@
         #link-github { top: 32.9%; left: 70.3%; }
         #link-soon { top: 82.8%; left: 88.8%; }
 
+        /* --- INSTRUCTION LABEL (Base Styles) --- */
         .instruction-label {
             background-color: var(--text-bg);
             color: #fff;
@@ -223,13 +175,171 @@
             animation: fadeInLabel 1.8s cubic-bezier(0.19, 1, 0.22, 1) 0.5s forwards;
         }
 
-        /* --- ADDED: Default visibility for text spans --- */
+        /* Default visibility: Desktop shown, Mobile hidden */
         .mobile-text { display: none; }
         .desktop-text { display: inline; }
 
         @keyframes fadeInLabel {
             0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
             100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        /* ------- MOBILE MODE OVERRIDES (Native Horizontal Scroll) ------- */
+        @media (max-width: 768px) {
+            /* 1. Setup Scroll Container */
+            .layout-wrapper {
+                width: 100%;
+                height: 100%;
+                overflow-x: auto; /* Enable native horizontal scroll here */
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+                pointer-events: auto;
+            }
+
+            /* Remove scroll from body to avoid double scrollbars */
+            html, body {
+                overflow: hidden; 
+            }
+
+            .image-container {
+                position: relative;
+                top: 0;
+                left: 0;
+                transform: none;
+                height: 100vh;
+                width: auto; /* Allow width to expand naturally */
+                transition: none; 
+            }
+
+            /* Toggle Text Visibility for Mobile */
+            .desktop-text { display: none !important; }
+            .mobile-text { display: inline !important; }
+
+            /* 2. PERMANENT ACTIVE STATE FOR MOBILE */
+            .label {
+                opacity: 1 !important; /* Force visible */
+                transform: translateX(0) !important; /* Force position */
+            }
+
+            .dot {
+                background-color: #fff !important; /* Force bright white */
+                box-shadow: 0 0 15px rgba(255,255,255,0.6) !important; /* Force glow */
+            }
+
+            /* Optional: Keep smooth transition if resizing window */
+            .dot, .label {
+                transition: all 1.8s cubic-bezier(0.19, 1, 0.22, 1);
+            }
+        }
+
+        /* --- MODAL STYLES --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            max-width: 90%;
+            width: 320px;
+            transform: scale(0.95);
+            transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .modal-overlay.open .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-content h3 {
+            color: #fff;
+            margin-top: 0;
+            margin-bottom: 24px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            font-size: 13px; 
+            opacity: 0.8;
+        }
+
+        .modal-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .modal-option {
+            display: flex;
+            align-items: center;
+            padding: 14px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            text-decoration: none;
+            color: #fff;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-option:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Aesthetic Dot inside Menu */
+        .dot-small {
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border-radius: 50%;
+            margin-right: 16px;
+            box-shadow: 0 0 8px rgba(255,255,255,0.6);
+            flex-shrink: 0;
+        }
+
+        .option-text {
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .close-modal {
+            margin-top: 24px;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 13px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+            padding: 10px;
+            font-weight: 500; 
+        }
+
+        .close-modal:hover {
+            color: #fff;
         }
     </style>
 </head>
@@ -260,7 +370,8 @@
                 <span class="label">Contact</span>
             </a>
 
-            <a href="#resume" class="hotspot" id="link-notes">
+            <!-- Updated: Triggers the Modal -->
+            <a href="#" class="hotspot" id="link-notes" onclick="openNotesModal(event)">
                 <span class="dot"></span>
                 <span class="label">Notes</span>
             </a>
@@ -283,12 +394,45 @@
         </div>
     </div>
 
+    <!-- MODAL STRUCTURE -->
+    <div id="notes-modal" class="modal-overlay" onclick="closeNotesModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h3>Access Notes (Upload Soon)</h3>
+            <div class="modal-options">
+                <a href="" target="_blank" class="modal-option">
+                    <span class="dot-small"></span>
+                    <span class="option-text">Git_Cheat_Sheet.pdf</span>
+                </a>
+                <a href="" target="_blank" class="modal-option">
+                    <span class="dot-small"></span>
+                    <span class="option-text">Calc_3_Guide.pdf</span>
+                </a>
+                <a href="" target="_blank" class="modal-option">
+                    <span class="dot-small"></span>
+                    <span class="option-text">ESP32_Boards_Makers.pdf</span>
+                </a>
+            </div>
+            <button class="close-modal" onclick="closeNotesModal()">Close</button>
+        </div>
+    </div>
+
     <script>
         const img = document.getElementById('main-bg');
         img.onerror = function() {
             console.log("bg.png not found.");
             // Optional: fallback logic here
         };
+
+        // --- MODAL LOGIC ---
+        function openNotesModal(e) {
+            e.preventDefault(); // Prevent default anchor jump
+            document.getElementById('notes-modal').classList.add('open');
+        }
+
+        function closeNotesModal(e) {
+            // Close if clicking overlay or close button
+            document.getElementById('notes-modal').classList.remove('open');
+        }
 
         // Note: Logic for 'inactive zones' and scroll detection removed
         // since dots are now permanently active on mobile via CSS.
