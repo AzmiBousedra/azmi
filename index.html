@@ -84,7 +84,7 @@
             }
 
             .desktop-text { display: none; }
-            .mobile-text { display: inline; }
+            .mobile-text { display: inline !important; } /* Force display on mobile */
 
             /* 2. PERMANENT ACTIVE STATE FOR MOBILE */
             /* Dots and Labels are always in their 'hover' state */
@@ -222,6 +222,10 @@
             opacity: 0;
             animation: fadeInLabel 1.8s cubic-bezier(0.19, 1, 0.22, 1) 0.5s forwards;
         }
+
+        /* --- ADDED: Default visibility for text spans --- */
+        .mobile-text { display: none; }
+        .desktop-text { display: inline; }
 
         @keyframes fadeInLabel {
             0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
