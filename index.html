@@ -549,19 +549,19 @@
     <!-- NOTES MODAL STRUCTURE -->
     <div id="notes-modal" class="modal-overlay" onclick="closeNotesModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <h3>Access Notes</h3>
+            <h3>Personal Notes</h3>
             <div class="modal-options">
-                <a href="" target="_blank" class="modal-option">
+                <a href="linux.pdf" target="_blank" class="modal-option">
                     <span class="dot-small"></span>
-                    <span class="option-text">Git-Notes.pdf</span>
+                    <span class="option-text">Linux.pdf</span>
                 </a>
-                <a href="" target="_blank" class="modal-option">
+                <a href="Git.pdf" target="_blank" class="modal-option">
                     <span class="dot-small"></span>
-                    <span class="option-text">Calc-3-heatSheet.pdf</span>
+                    <span class="option-text">Git.pdf</span>
                 </a>
-                <a href="" target="_blank" class="modal-option">
+                <a href="LLMs.pdf" target="_blank" class="modal-option">
                     <span class="dot-small"></span>
-                    <span class="option-text">ESP-Board-Makers.pdf</span>
+                    <span class="option-text">LLMs.pdf</span>
                 </a>
             </div>
             <button class="close-modal" onclick="closeNotesModal()">Close</button>
@@ -602,8 +602,11 @@
                 <div><span class="prompt">➜</span> <span class="path">~/projects</span> ls -1</div>
                 <div class="output">
                     <!-- Dynamic Links with Data Attributes for Skills -->
-                    <a href="https://comments4.me" target="_blank" class="terminal-link" data-skills="[STACK] HTML, CSS, JS, API, NodeJS, PrismJS">Comments4Me</a><br>
-                    <a href="https://github.com/AzmiBousedra/TuneWear" target="_blank" class="terminal-link" data-skills="[STACK] C++, ESP32, API">TuneWear</a><br>
+                    <a href="#" onclick="return false;" class="terminal-link" data-skills="[AfterLab] ExtendScript, JavaScript, React, GSAP, XML">AfterLab</a><br>
+                    <a href="#" onclick="return false;" class="terminal-link" data-skills="[InternPal] Python, Web Automation, Gemini API, CLI">InternPal</a><br>
+                    <a href="#" onclick="return false;" class="terminal-link" data-skills="[Ironify] Python, FastAPI, TensorFlow, Gemini API, MongoDB">Ironify (ConUHacks)</a><br>
+                    <a href="https://github.com/AzmiBousedra/TuneWear" target="_blank" class="terminal-link" data-skills="[TuneWear] C++, ESP32, IoT, Blynk, Hardware Assembly">TuneWear</a><br>
+                    <a href="https://comments4.me" target="_blank" class="terminal-link" data-skills="[Comments4Me] JavaScript, Node.js, Express, Gemini API, Prism.js">Comments4Me</a><br>
                     
                     <span style="color: #777; font-size: 0.9em; margin-top: 10px; display: inline-block;"># Hover file to see tech stack...</span>
                 </div>
